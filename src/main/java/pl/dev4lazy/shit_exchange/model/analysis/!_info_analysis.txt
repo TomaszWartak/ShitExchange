@@ -1,0 +1,7 @@
+Służy do przechowywania wyników z podsumowania wymian pomiędzy parami sklepów.
+Dla każdej pary są dwa obiekty AnalysisItem, gdzie w jednej dawcą jest sklep X, a biorcą sklep Y,
+a w drugiej odwrotnie - dawcą jest sklep Y, a biorcą sklep X.
+
+HashMap<AnalysisItemCompositeKey, AnalysisItem> analysisData;
+    AnalysisItemCompositeKey(int donorStoreId, int takerStoreId )
+    AnalysisItem

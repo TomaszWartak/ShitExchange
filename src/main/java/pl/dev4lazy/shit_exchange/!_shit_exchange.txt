@@ -1,0 +1,6 @@
+Aplikacja służy przygotowywwania propozycji wymian rezerwą pomiędzy sklepami.
+Odbywa się to poprzez tworzenia paczek artykółów  dawca (A) <-> biorca (B) i w drugą stronę - dawca (B) <-> biorca (A).
+Podczas startu aplikacji:
+- pobierane są parametry klasyfikujące artykuły z rezerwy, czy nadają się do oddania
+- jeśli istnieje plik exclusions.csv, to pobierane są tzw. "wykluczenia", czyli lista artykułów, które nie mają być
+brane pod uwagę (np. jeśli wymiana z jakimś sklepem

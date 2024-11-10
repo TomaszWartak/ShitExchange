@@ -1,0 +1,34 @@
+DONACJE
+Jak zadziała opcja "Procesuj dane doancji", jeśli dane doancji będą już utworzone?
+- wyczyszczenie danych - CHYBA NIE DZIAŁA OK, bo tylko czyści dane donacji, a nie usuwa wyłączeń z rezerwy.
+    Zob. DonationDataOperator.clearDonationsData()
+- przygotowanie danych dla kolejnego biorcy - ???
+- rezygnacja z powtórnego procesowania - działa ok
+
+
+WYŁĄCZENIA
+Jeśli są initial exclusions, to czy ich działanie jest zgodne z działaniem późniejszych wykluczeń?
+Initial exclusions (odczytane z pliku) u głownego dawcy wyłączają poszczególne artykuły (oddawane biorcom)
+i wyłączaje całe (wszystkie artykuły) sklepy biorców.
+=> Czy to zapewnia, że na etapie wyłączeń późniejszych (po wyborze kolejnych biorców) artykuły biorców z initial exclusions
+nie są powtórnie brane pod uwagę do analizy?
+=> Lub, czy na etapie initial (a później?) należy wyłączać również pojedynczo artykuły brane przez głównego dawcę
+od boirców z initial exclusions
+TODO Trzeba sprawdzić, czy w rezerwie niewykluczonych biorców są artykuły, które były na liście initial exclusions.
+Jeśli tak, to trzeba je wykluczyć również, żeby nie były brane pod uwagę.
+TODO OK... Wykluczsanie pojedynczych artykułów teoretycznie działa, ale, czy dział proces odwrotny?
+W przypadku initial exclusions "włączanie" pojedynczych artykułów nie jest potrzebne, ale gdy będą wyłączenia
+w trakcie pracy aplikacji, to jak wtedy zrobić "włączenia"?
+Zob. DonationsDataOperator.updateDataAfterPrimaryTakerSelection()
+
+
+1. Jak wyłącza się w trakcie działania? <- opisz to w wykluczniech i rezerwie
+Zob. DonationsDataOperator.updateDataAfterMainTakerSelection() - tam wołane są dwie metody:
+excludeReserveWhichWillBeDonatedFromMainDonorToPrimaryTaker()
+excludeReserveWhichWillBeDonatedFromPrimaryTakerToMainDonor() -
+Jak kod w tych metodach ma się do wyłączeń pojedynczych artykułów, które zaimplementowałeś w
+ReserveDataOperator.
+    setInitiallyExcludedArticlesInMainDonorStore();
+    setFullInitiallyExcludedTakersStores();
+    setInitiallyExcludedArticlesInOtherTakersStores();
+

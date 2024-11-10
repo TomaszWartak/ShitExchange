@@ -1,0 +1,8 @@
+Na etapie uruchomienia aplikacji wyłączenia służą uwzględnieniu tego,
+że np. wymiana z innymi sklepami jest w trakcie i nie należy analizować artykułów,
+które w tych wymianach występują.
+Dane o tych artykułach są podawana podczas startu z pliku exclusions.csv.
+Dane te używane są podczas tworzenia struktury danych o rezerwie.
+Wtedy wszystkie dane rezerwy sklepów biorców wymienionych w pliku są wyłączane,
+aby nie były uwzględniane w dalszym działaniu aplikacji.
+W przypadku rezerwy dawcy wyłącza się pojedyncze artykuły wymienione w pliku, które są oddawane do tych biorców.

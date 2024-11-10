@@ -1,0 +1,7 @@
+reader odczytuje porcję (np. linię z pliku csv)
+parser dzieli porcję na kawałki (np. na liste Stringów, rozdzieloną dzęki np. ";" użytym w linii)
+decoder interpretuje kawałek i zamienienia go na obiekt wejściowy (najczęsciej mapę <nazwa_kolumny_nagłówka, opakowana_wartość>
+converter zamienia obiekt wejściowy na obiekt wyjściowy (obiekt)
+coder zamienia obiekt wyjściowy na kawałki (listę Stringów)
+serializer składa kawałki w porcję (np. liste Stringów połączoną w jeden String, separowaną np. ";")
+writer zapisuje porcję (np. linię do pliku csv)

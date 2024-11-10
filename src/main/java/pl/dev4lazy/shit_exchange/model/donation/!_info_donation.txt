@@ -1,0 +1,35 @@
+DONACJE.
+Donacje przechowują informacje o artykułach z rezerwy dawców, które spełniają warunki (np. w listingu, niska rotacja)
+u biorców (mogą byc potencjalnie oddane do biorców).
+Przechowywyane są w strukturze, jak niżej:
+DonationData
+    HashMap< Integer, AllDonationsDataForDonor > // Integer - storeId dawcy
+        HashMap<Integer, DonationsDataForTakerStore> // Integer - storeId biorcy
+            HashMap< Integer, DonationItem > // Integer - sapId
+
+Donacje powstają po wybraniu z menu opcji "Procesuj dane donacji".
+Warunkiem ich powstanie jest wcześniejsze załadowanie danych listingu i rezerwy.
+Generalnie jeśli Config.IS_ONE_DONOR_ONLY=false, to jest tworzona struktura "każdy z każdym",
+gdzie np. w przypadku 10 sklepów, dla każdego z nich jest tworzone 9 list z możliwymi donacjami do pozostałych sklepów.
+UWAGA: wersja działania "każdy z każdym" nie została przestestowana.
+Jeśli Config.IS_ONE_DONOR_ONLY=true, to tworzona jest struktura, w które sklep ONE_DONOR ma 9 list z donacjami
+do pozostałych sklepów, a pozostałe sklepy mają tylko 1 listę - z donacjami do sklepu ONE_DONOR.
+
+DONACJE A WYŁACZENIA
+Wyłączeń sa dwa rodzaje, ale charakter mają podobny.
+Służą do zapewnienia, że poszczególne sklepy, lub artykuły są wyłączone z wymiany rezerwą.
+Wyłącza się dane dpnacji oraz rezerwy.
+Rodzaj 1: "Initial exclusions" (zob. plik info w pakiecie initial_exclusions) - służą do wyłączeń
+na etapie startu apliakcji (dane sa pobierane z pliku). Na tym etapie wyłącza się tylko rezerwę.
+W konsekwencji podczas procesowania danych donacji wykluczone sklepy i artykuły nie są brane pod uwagę.
+Rodzaj 2: Wyłączenia w trakcie działania aplikacji powstają, gdy:
+    - z menu zostanie wybrana opcja "Procesuj dane donacji".
+    - zostanie wybrana para "głowny dawca <-> biorca" (opcja menu "Wybierz biorcę") TODO sprawdź to.
+    - zostanie wybrna opcja "Usuń biorców bez wymian z danych donacji"
+W tym ostatnim przypadku, jeśli sklep biorcy nie jest brany pod uwagę w wymianach, a nie był dotychczas wykluczony,
+to:
+- w danych rezerwy tego sklepu właściwość ReserveDataForStore.excludedFromDonations jest ustawiana na true, co oznacza,
+że żaden artykuł z tego sklepu nie będzie brany pod uwagę przy procesowaniu donacji
+- w danych donacji dla tego sklepu we własciwości AllDonationsDataForDonor.takersNodes usuwane są donacje
+do wszystkich sklepów
+- dla sklepu głownego dawcy usuwane są donacje artykułów do tego sklepu

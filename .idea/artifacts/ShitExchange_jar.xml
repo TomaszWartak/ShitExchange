@@ -1,0 +1,13 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="ShitExchange:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/ShitExchange_jar</output-path>
+    <root id="archive" name="ShitExchange.jar">
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/META-INF/MANIFEST.MF" />
+      </element>
+      <element id="module-output" name="ShitExchange" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/ibm/icu/icu4j/73.2/icu4j-73.2.jar" path-in-jar="/" />
+      <element id="library" level="project" name="Maven: com.ibm.icu:icu4j:73.2" />
+    </root>
+  </artifact>
+</component>

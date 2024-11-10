@@ -1,0 +1,16 @@
+Tworzona jest struktura:
+ReserveData
+    HashMap<Integer, ReserveDataForStore> // Integer = nr sklepu, w którym jest rezerwa
+        ReserveDataForStore
+            HashMap<Integer, ReserveItem> // Integer = sapId
+
+Podczas tworzenia struktury danych o rezerwie, uwzględniane są ewentualne wyklucznie (zob. pakiet initial_exclusions),
+które służą służą uwzględnieniu tego, że np. wymiana z innymi sklepami jest w trakcie i nie należy analizować artykułów,
+które w tych wymianacch występują.
+Wtedy wszystkie dane rezerwy sklepów biorców wymienionych w pliku są wyłączane
+(ReserveDataForStore.excludedFromDonations=true), aby nie były uwzględniane w dalszym działaniu aplikacji.
+Dodatkowo artykuły biorców wymienione w pliku, są wyłączane (ReserveItem.excluded=true) u pozostałych biorców.
+W przypadku artykułów w rezerwie dawcy wymienionych w pliku (są one oddawane do biorców wymienionych w pliku)
+wyłącza się je pojedynczo (ReserveItem.excluded=true) w danych rezerwy głównego dawcy.
+
+TODO !!! opisz co i jak się dzieje z wykluczeeniami przy tworzeniu wymian podczas działania aplikacji
