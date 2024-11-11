@@ -125,11 +125,7 @@ public class ReserveDataOperator implements ErrorsProne {
             // - jeśli jest ONE_DONOR to wyłączenie z analizy wszystkich danych rezerwy głownego biorcy
             // - jeśli jest ONE_DONOR to wyłączenie z analizy wskazaanych w wyłączeniach artykułów głównego dawcy
             if ( ToolsGrip.getApp().getInitialExclusionsDataOperator().areInitialExclusions() ) {
-                setInitiallyExcludedArticlesInMainDonorStore();
-                setFullInitiallyExcludedTakersStores();
-                // TODO !!! czy oprócz wstępnego wyłączenia sklepów dawców, nie trzeba również wyłączyć
-                // pojedynczych artykułów oddawanaych do tych biorców w innych sklepach
-                setInitiallyExcludedArticlesInOtherTakersStores();
+                setReserveInitialExclusions();
                 ToolsGrip.handleNotification( "Wykluczenia z pliku zostały uwzględnione" );
             }
         } catch (Exception e) {
@@ -182,20 +178,14 @@ public class ReserveDataOperator implements ErrorsProne {
                 ( reserveItem.getValue()>0 );
     }
 
+    public void setReserveInitialExclusions() {
+        setInitiallyExcludedArticlesInMainDonorStore();
+        setFullInitiallyExcludedTakersStores();
+        setInitiallyExcludedArticlesInOtherTakersStores();
+    }
+
     private void setInitiallyExcludedArticlesInMainDonorStore() {
         if ( Config.IS_ONE_DONOR_ONLY ) {
-            /* todo
-            InitialExclusionsDataForStore initialExclusionsForMainDonorStore =
-                    initialExclusionsData.getInitialExclusionsDataForStore( Config.ONE_DONOR_ONLY_ID );
-            ReserveDataForStore reserveDataForOneDonorStore =
-                    reserve.getReserveDataForStore( Config.ONE_DONOR_ONLY_ID );
-            for ( Map.Entry<Integer, ReserveItem> entry : reserveDataForOneDonorStore.getStoreReserveItemsNode().entrySet() ) {
-                if ( initialExclusionsForMainDonorStore.getNodeBody().containsKey( entry.getKey() ) ) {
-                    entry.getValue().setExcludedFromDonation();
-                }
-            }
-            */
-
             ArrayList<Integer> initiallyExcludedArticlesSapIdsForMainDonorStore =
                     initialExclusions.getInitiallyExcludedArticlesSapIdsForStore( Config.ONE_DONOR_ONLY_ID );
             reserve.excludeManyArticlesInStoreFromDonations(
@@ -205,7 +195,7 @@ public class ReserveDataOperator implements ErrorsProne {
         }
     }
 
-    public void setFullInitiallyExcludedTakersStores() {
+    private void setFullInitiallyExcludedTakersStores() {
         ArrayList<Integer> fullInitiallyExcludedStoresIds =
                 initialExclusions.getFullInitiallyExcludedStoresIds();
         for ( Integer excludedStoreId : fullInitiallyExcludedStoresIds ) {
@@ -213,22 +203,13 @@ public class ReserveDataOperator implements ErrorsProne {
         }
     }
 
-    public void excludeStoreReserveData( Integer storeId ) {
+    private void excludeStoreReserveData( Integer storeId ) {
         reserve.excludeStoreFromDonations( storeId );
     }
 
-    public void setInitiallyExcludedArticlesInOtherTakersStores() {
+    private void setInitiallyExcludedArticlesInOtherTakersStores() {
         ArrayList<Integer> fullInitiallyExcludedStoresIds = initialExclusions.getFullInitiallyExcludedStoresIds();
         for (Integer excludedStoreId: fullInitiallyExcludedStoresIds) {
-            /* ArrayList<InitialExclusionItem> initialExclusionItems =
-                    initialExclusionsData
-                            .getInitialExclusionsDataForStore( excludedStoreId )
-                            .getInitialExclusionItems();
-            for (InitialExclusionItem initialExclusionItem : initialExclusionItems ) {
-                 reserve.excludeArticleFromDonationsForAllStores( initialExclusionItem.getSapId() );
-            } */
-            // TODO sprawdź, czy to co powyżej jest tożsame z tym co poniżej
-
             ArrayList<Integer> initiallyExcludedArticlesSapIds =
                     initialExclusions.getInitiallyExcludedArticlesSapIdsForStore( excludedStoreId );
             reserve.excludeManyArticlesFromDonationsForNotExcludedStores(

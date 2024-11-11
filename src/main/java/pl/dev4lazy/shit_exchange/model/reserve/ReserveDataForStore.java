@@ -74,7 +74,7 @@ public class ReserveDataForStore implements Serializable {
 
     public void excludeReserveItemFromDonations( Integer sapId ) {
         if ( storeReserveItemsNode.containsKey( sapId ) ) {
-            storeReserveItemsNode.get( sapId ).setExcludedFromDonation();
+            storeReserveItemsNode.get( sapId ).excludeFromDonation();
         }
     }
 
@@ -82,12 +82,12 @@ public class ReserveDataForStore implements Serializable {
         storeReserveItemsNode.entrySet()
                 .stream()
                 .filter( entry -> sapIds.contains( entry.getKey() ) )
-                .forEach( entry -> entry.getValue().setExcludedFromDonation() );
+                .forEach( entry -> entry.getValue().excludeFromDonation() );
     }
 
     public void includeReserveItemForDonations( Integer sapId ) {
         if ( storeReserveItemsNode.containsKey( sapId ) ) {
-            storeReserveItemsNode.get( sapId ).setIncludedForDonation();
+            storeReserveItemsNode.get( sapId ).includeForDonation();
         }
     }
 
@@ -95,7 +95,11 @@ public class ReserveDataForStore implements Serializable {
         storeReserveItemsNode.entrySet()
                 .stream()
                 .filter( entry -> !sapIds.contains( entry.getKey() ) )
-                .forEach( entry -> entry.getValue().setIncludedForDonation() );
+                .forEach( entry -> entry.getValue().includeForDonation() );
+    }
+
+    public void includeAllReserveItemsForDonations() {
+        getReserveItems().stream().forEach( ReserveItem::includeForDonation);
     }
 
     public ArrayList<ReserveItem> getReserveItemsExcludedFromDonations() {

@@ -83,7 +83,9 @@ public class DonationsDataOperator {
                             continue;
                         }
                         if  ( !takerStoreId.equals( donorStoreId) ){
+                            // TODO start
                             int okCounter = 0;
+                            // TODO end
                             for (ReserveItem reserveItem : donorReserveDataForStore.getReserveItems()) {
                                 if ( isDonorReserveItemValidForDonation( reserveItem, takerStoreId) ) {
                                     DonationItem donationItem = createDonationItem( reserveItem, takerStoreId );
@@ -158,7 +160,7 @@ public class DonationsDataOperator {
             for ( ReserveItem reserveItem : donorReserveItems ) {
                 if ( reserveItem.isExcludedFromDonation() &&
                         initialExclusionsDataForMainDonor.isArticleInitiallyExcluded( reserveItem.getSapId() ) ) {
-                    reserveItem.setIncludedForDonation();
+                    reserveItem.includeForDonation();
                 }
             }
         }
@@ -166,6 +168,15 @@ public class DonationsDataOperator {
 
     public void clearDonationsData() {
         donations.clearAllDonations();
+        /*
+        TODO - stan sprzed utworzenia donacji, to stan po odczycie listingu, rezerwy i initial_exclusions
+        Czyli trzeba wyczyścić wszystkie wyłączenia z rezerwy, a następnie ponownie uwzględnić initial_exclusionss
+         */
+        reserve.clearAllExclusions();
+        if ( ToolsGrip.getApp().getInitialExclusionsDataOperator().areInitialExclusions() ) {
+            ToolsGrip.getApp().getReserveDataOperator().setReserveInitialExclusions();
+        }
+
         /* TODO !!! a rezerwa? Żeby odtworzyc stan sprzed donacji, to:
          Jeśli nie ma initial exclusions, to
             - dla sklepów gdzie ReserveDataForStore.excludedFromDonations=false, przejrzec wszystkie artykuły i ustawić
@@ -177,6 +188,11 @@ public class DonationsDataOperator {
          oraz dla głownego dawcy należy zostawic ReserveItem.excluded=true dla jego artykułów wymienionych
          w  exclusions.csv
         */
+
+        /*
+        A jeśli są wyłączenia, które powstały w wyniku wyboru głównego biorcy?
+
+         */
         /*
          Dane analizy chyba również należy usunąć, bo gdy jeśli naliza była robiona, to pomimo wykoanani tego,
          co powyżej, to po wybraniu "Generuj plik z danymi analizy" wygenerowane zostaną dane z istniejącej analizy.
@@ -184,10 +200,9 @@ public class DonationsDataOperator {
     }
 
     public void choosePrimaryTakerStore() {
-        // jeśli nie ma wygenerowanych danych pośrednich to na drzewo
         if ( donations.haveNoData() ) {
-            ToolsGrip.handleNotification( "Brak danych pośrednich." );
-            ToolsGrip.handleNotification( "Wygeneruj dane pośrednie" );
+            ToolsGrip.handleNotification( "Brak danych donacji." );
+            ToolsGrip.handleNotification( "Wygeneruj dane donacji" );
             ToolsGrip.handleNotification( "" );
             return;
         }
@@ -248,7 +263,7 @@ public class DonationsDataOperator {
 
     private void updateDataAfterPrimaryTakerSelection(Integer primaryTakerStoreId ) {
         // TODO
-        // usuń artykuły "użyte" w donacji do wybranego biorcy artykuły
+        // usuń artykuły "użyte" w donacji do wybranego biorcy
         // z donacji dla pozostałych takerów (aktywnych = nie wykluczonych)
         AllDonationsDataForDonor allDonationsDataOfMainDonor =
                 donations.getAllDonationsDataOfDonor( Config.ONE_DONOR_ONLY_ID );

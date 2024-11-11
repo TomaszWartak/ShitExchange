@@ -26,6 +26,7 @@ public class ShitExchangeApplication {
     public InitialExclusionsDataOperator getInitialExclusionsDataOperator() {
         return initialExclusionsDataOperator;
     }
+    public ReserveDataOperator getReserveDataOperator() { return reserveDataOperator; }
 
     public void run() {
         showParameters();
@@ -103,7 +104,7 @@ public class ShitExchangeApplication {
             case PROCESS_DONATIONS_DATA -> processDonationsData();
             case CLEAR_DONATIONS_DATA -> clearDonationsData();
             case ANALYZE_DONATIONS_DATA -> analyzeDonationsData();
-            case CHOOSE_NEXT_TAKER_STORE -> chooseMainTakerStore();
+            case CHOOSE_NEXT_TAKER_STORE -> choosePrimaryTakerStore();
             case REMOVE_UNUSED_TAKERS -> removeUnusedTakersFromDonationsData();
             case GENERATE_ANALYZE_FILE -> generateAnalyzeFile();
             case GENERATE_OUTPUT_FILE -> generateOutputFile();
@@ -158,7 +159,7 @@ public class ShitExchangeApplication {
         analysisDataOperator.analyzeData();
     }
 
-    private void chooseMainTakerStore() {
+    private void choosePrimaryTakerStore() {
         donationsDataOperator.choosePrimaryTakerStore();
     }
 

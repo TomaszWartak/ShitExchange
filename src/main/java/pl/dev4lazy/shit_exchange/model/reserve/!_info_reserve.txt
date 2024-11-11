@@ -13,4 +13,5 @@ Dodatkowo artykuły biorców wymienione w pliku, są wyłączane (ReserveItem.ex
 W przypadku artykułów w rezerwie dawcy wymienionych w pliku (są one oddawane do biorców wymienionych w pliku)
 wyłącza się je pojedynczo (ReserveItem.excluded=true) w danych rezerwy głównego dawcy.
 
+
 TODO !!! opisz co i jak się dzieje z wykluczeeniami przy tworzeniu wymian podczas działania aplikacji

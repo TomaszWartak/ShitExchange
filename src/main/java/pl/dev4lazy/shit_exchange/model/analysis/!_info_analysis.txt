@@ -1,7 +1,16 @@
-Służy do przechowywania wyników z podsumowania wymian pomiędzy parami sklepów.
+Służy do przechowywania wartości wymian pomiędzy parami sklepów.
 Dla każdej pary są dwa obiekty AnalysisItem, gdzie w jednej dawcą jest sklep X, a biorcą sklep Y,
 a w drugiej odwrotnie - dawcą jest sklep Y, a biorcą sklep X.
 
 HashMap<AnalysisItemCompositeKey, AnalysisItem> analysisData;
     AnalysisItemCompositeKey(int donorStoreId, int takerStoreId )
     AnalysisItem
+
+Analiza korzysta z danych donacji (zob. !_info_donation.txt).
+Aby móc ją wykonać, należy wcześniej:
+- przetworzyć dane wejściowe listingu (opcja menu "Pobierz dane wejściowe z pliku listingu"),
+- przetworzyć dane wejściowe rezerwy (opcja menu "Pobierz dane wejściowe z pliku rezerwy") - zob. !_info_reserve.txt,
+- przetworzyć (to dzieje się automatycznie) wyłączenia - zob. !_info_initial_exclusions.txt
+- utworzyć dane donacji - opcja menu "Procesuj dane donacji"
+
+Dane analizy można zapisać do pliku analiza.csv (opcja menu "Generuj plik z danymi analizy").

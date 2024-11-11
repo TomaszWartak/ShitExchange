@@ -47,6 +47,10 @@ public class ReserveData implements Serializable {
         return storesReserveNodes.get( storeId );
     }
 
+    public ArrayList<ReserveDataForStore> getReserveDataForAllStores() {
+        return new ArrayList<>( getStoresReserveNodes().values() );
+    }
+
     public boolean isNotInReserveInStore( ReserveItem reserveItem, Integer storeId ) {
         return getReserveDataForStore( storeId ).isNotInReserve( reserveItem );
     }
@@ -133,7 +137,7 @@ public class ReserveData implements Serializable {
                 .stream()
                 .filter( reserveDataForStore -> reserveDataForStore.isExcludedFromDonations() )
                 .map( reserveDataForStore -> reserveDataForStore.getStoreId() )
-                .collect(Collectors.toCollection( ArrayList::new) );
+                .collect( Collectors.toCollection( ArrayList::new) );
     }
 
     public ArrayList<Integer> getNotExcludedFromDonationsStoreIds() {
@@ -142,7 +146,13 @@ public class ReserveData implements Serializable {
                 .stream()
                 .filter( reserveDataForStore -> reserveDataForStore.isNotExcludedFromDonations() )
                 .map( reserveDataForStore -> reserveDataForStore.getStoreId() )
-                .collect(Collectors.toCollection( ArrayList::new) );
+                .collect( Collectors.toCollection( ArrayList::new) );
     }
 
+    public void clearAllExclusions() {
+        for ( ReserveDataForStore reserveDataForStore : getReserveDataForAllStores() ) {
+            reserveDataForStore.includeAllReserveItemsForDonations();
+            reserveDataForStore.includeForDonations();
+        }
+    }
 }

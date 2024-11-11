@@ -120,17 +120,16 @@ public class ReserveItem implements Serializable {
     public void setRotation(Double rotation) {
         this.rotation = rotation;
     }
-
-    public void setExclusionFromDonationState(boolean excludedFromDonation) {
-        this.excludedFromDonation = excludedFromDonation;
-    }
-
-    public void setExcludedFromDonation() {
+    public void excludeFromDonation() {
         setExclusionFromDonationState( true );
     }
 
-    public void setIncludedForDonation() {
+    public void includeForDonation() {
         setExclusionFromDonationState( false );
+    }
+
+    private void setExclusionFromDonationState(boolean excludedFromDonation) {
+        this.excludedFromDonation = excludedFromDonation;
     }
 
     public boolean isExcludedFromDonation() {
