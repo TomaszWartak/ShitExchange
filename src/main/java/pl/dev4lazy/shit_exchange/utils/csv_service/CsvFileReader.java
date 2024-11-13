@@ -92,15 +92,16 @@ public class CsvFileReader {
     }
 
     public long getEstimateCsvFileLinesQuantity( ) throws IOException {
+        final int LINES_TO_READ = 100;
         long estimateCsvFileLinesQuantity = 0;
         // odczyt nagłówka
         String csvLine = readCsvLine();
-        // odczyt pierwszego wiersza po nagłówku
-        csvLine = readCsvLine();
         Charset charset = Charset.forName( charsetName );
-        // powtórzenie 10x i wyliczenie średniej
+        // powtórzenie LINES_TO_READ razy i wyliczenie średniej
         int lineSizesSum = 0;
-        for (int index=0; index<10; index++) {
+        for (int index=0; index<LINES_TO_READ; index++) {
+            // odczyt kolejnych wierszy
+            csvLine = readCsvLine();
             byte[] csvLineBytes = csvLine.getBytes( charset );
             int csvLineSize = 0;
             if (csvLineBytes.length>0) {
@@ -109,7 +110,7 @@ public class CsvFileReader {
             lineSizesSum = lineSizesSum + csvLineSize;
         }
 
-        estimateCsvFileLinesQuantity = fileSizeInBytes / (lineSizesSum / 10);
+        estimateCsvFileLinesQuantity = fileSizeInBytes / (lineSizesSum / LINES_TO_READ);
         return estimateCsvFileLinesQuantity;
     }
 }

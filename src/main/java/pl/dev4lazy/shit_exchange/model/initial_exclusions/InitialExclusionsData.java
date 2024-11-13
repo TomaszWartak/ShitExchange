@@ -21,6 +21,10 @@ public class InitialExclusionsData implements Serializable {
         return excludedStoresIdNodes;
     }
 
+    public boolean areInitialExclusions() {
+        return getAllStoreIdsWithInitialExclusions().size()>0;
+    }
+
     public void addInitialExclusionItem( InitialExclusionItem initialExclusionItem ) {
         if (isNotStoreIdPresent( initialExclusionItem.getStoreId() ) ) {
             createStoreIdInitialExclusionsNode( initialExclusionItem );

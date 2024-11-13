@@ -4,7 +4,6 @@ import pl.dev4lazy.shit_exchange.Config;
 import pl.dev4lazy.shit_exchange.model.DataGrip;
 import pl.dev4lazy.shit_exchange.model.ToolsGrip;
 import pl.dev4lazy.shit_exchange.model.initial_exclusions.InitialExclusionsData;
-import pl.dev4lazy.shit_exchange.model.initial_exclusions.InitialExclusionsDataForStore;
 import pl.dev4lazy.shit_exchange.model.listing.ListingData;
 import pl.dev4lazy.shit_exchange.model.listing.ListingDataForStore;
 import pl.dev4lazy.shit_exchange.model.listing.ListingItem;
@@ -51,15 +50,11 @@ public class DonationsDataOperator {
                 case 1: {
                     // wyczyszczenie danych
                     clearDonationsData();
-                    restoreInitialExclusions();
+                    /* TODO?
+                    restoreInitialExclusions();*/
                     ToolsGrip.handleNotification( "" );
                     ToolsGrip.handleNotification( "Dane pośrednie wyczyszczone." );
                     ToolsGrip.handleNotification( "" );
-                    break;
-                }
-                case 2: {
-                    // procesować przygotowanie danych dla kolejnego biorcy
-                    choosePrimaryTakerStore();
                     break;
                 }
             }
@@ -118,20 +113,24 @@ public class DonationsDataOperator {
                 showImproperValueNotification();
                 typeInputMismatchErrorNotOccurred = false;
             }
-            if ( typeInputMismatchErrorNotOccurred && chosenOption!=0 && chosenOption!=1 && chosenOption!=2 ) {
+            if ( typeInputMismatchErrorNotOccurred || isChosenValueImproper( chosenOption ) ) {
                 showImproperValueNotification();
             }
-        } while ( chosenOption!=0 && chosenOption!=1 && chosenOption!=2 );
+        } while ( isChosenValueImproper( chosenOption ) );
         return chosenOption;
     }
 
-    private void showAskingClearTheDonationsDataMenu( ) {
-        ToolsGrip.handleNotification( "Dane pośrednie były już przygotowane." );
-        ToolsGrip.handleNotification( "Czy checesz zrezygnować z tworzenia danych pośrednich? (0)." );
-        ToolsGrip.handleNotification( "Czy chcesz je usunąć? (1)" );
-        ToolsGrip.handleNotification( "Czy chcesz procesować przygotowanie danych dla kolejnego biorcy? (2)" );
+    private boolean isChosenValueImproper( int chosenOption ) {
+        return chosenOption != 0 && chosenOption != 1;
     }
 
+    private void showAskingClearTheDonationsDataMenu( ) {
+        ToolsGrip.handleNotification( "Dane donacji były już przygotowane." );
+        ToolsGrip.handleNotification( "Czy checesz zrezygnować z tworzenia danych donacji? (0)." );
+        ToolsGrip.handleNotification( "Czy chcesz je usunąć? (1)" );
+    }
+
+    /* TODO?
     private void restoreInitialExclusions() {
         restoreInitialFullExclusionsForTakers();
         restoreInitialExclusionsForMainDonor();
@@ -164,16 +163,12 @@ public class DonationsDataOperator {
                 }
             }
         }
-    }
+    }*/
 
     public void clearDonationsData() {
         donations.clearAllDonations();
-        /*
-        TODO - stan sprzed utworzenia donacji, to stan po odczycie listingu, rezerwy i initial_exclusions
-        Czyli trzeba wyczyścić wszystkie wyłączenia z rezerwy, a następnie ponownie uwzględnić initial_exclusionss
-         */
         reserve.clearAllExclusions();
-        if ( ToolsGrip.getApp().getInitialExclusionsDataOperator().areInitialExclusions() ) {
+        if ( initialExclusions.areInitialExclusions() ) {
             ToolsGrip.getApp().getReserveDataOperator().setReserveInitialExclusions();
         }
 
@@ -214,7 +209,7 @@ public class DonationsDataOperator {
                 new ArrayList<>( reserve.getNotExcludedFromDonationsStoreIds() );
         idsOfNotExcludedTakersStores.remove( Config.ONE_DONOR_ONLY_ID );
         Integer primaryTakerStoreId = askUserForSelectionOfPrimaryTakerStoreId( idsOfNotExcludedTakersStores );
-        if (primaryTakerStoreId!=0) {
+        if ( userChoosePrimaryTakerStore( primaryTakerStoreId ) ) {
             // Usuń artykuły "użyte" w donacji do wybranego biorcy artykuły
             // z donacji dla pozostałych takerów (aktywnych = nie wykluczonych)
             updateDataAfterPrimaryTakerSelection( primaryTakerStoreId );
@@ -239,11 +234,15 @@ public class DonationsDataOperator {
             // TODO czy choiceResult==0 działa? Zrób stałą REZYGNACJA_Z_WYBORU=0;
             // TODO zró mrtodę isChosenValueImproper() zamiast
             //  !idsOfNotExcludedTakersStores.contains( choiceResult ) || (choiceResult==0))
-            if (!idsOfNotExcludedTakersStores.contains( choiceResult ) || (choiceResult==0)) {
+            if (isChosenValueImproper( choiceResult, idsOfNotExcludedTakersStores)) {
                 showImproperValueNotification();
             }
-        } while ( !idsOfNotExcludedTakersStores.contains( choiceResult ) || (choiceResult==0));
+        } while (isChosenValueImproper( choiceResult, idsOfNotExcludedTakersStores ));
         return choiceResult;
+    }
+
+    private boolean isChosenValueImproper(Integer choiceResult, ArrayList<Integer> idsOfNotExcludedTakersStores)  {
+        return !idsOfNotExcludedTakersStores.contains(choiceResult) && (choiceResult != 0);
     }
 
     private void showGettingPrimaryTakerStoreMenu(ArrayList<Integer> idsOfStoresWithExclusions ) {
@@ -259,6 +258,11 @@ public class DonationsDataOperator {
         ToolsGrip.handleNotification( "" );
         ToolsGrip.handleNotification( "BŁĄD: Nieprawidłowa wartość..." );
         ToolsGrip.handleNotification( "" );
+    }
+
+
+    private boolean userChoosePrimaryTakerStore( Integer primaryTakerStoreId ) {
+        return primaryTakerStoreId != 0;
     }
 
     private void updateDataAfterPrimaryTakerSelection(Integer primaryTakerStoreId ) {

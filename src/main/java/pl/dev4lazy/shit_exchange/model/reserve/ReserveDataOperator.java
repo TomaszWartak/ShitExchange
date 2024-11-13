@@ -186,19 +186,15 @@ public class ReserveDataOperator implements ErrorsProne {
 
     private void setInitiallyExcludedArticlesInMainDonorStore() {
         if ( Config.IS_ONE_DONOR_ONLY ) {
-            ArrayList<Integer> initiallyExcludedArticlesSapIdsForMainDonorStore =
-                    initialExclusions.getInitiallyExcludedArticlesSapIdsForStore( Config.ONE_DONOR_ONLY_ID );
             reserve.excludeManyArticlesInStoreFromDonations(
                     Config.ONE_DONOR_ONLY_ID,
-                    initiallyExcludedArticlesSapIdsForMainDonorStore
+                    initialExclusions.getInitiallyExcludedArticlesSapIdsForStore( Config.ONE_DONOR_ONLY_ID )
             );
         }
     }
 
     private void setFullInitiallyExcludedTakersStores() {
-        ArrayList<Integer> fullInitiallyExcludedStoresIds =
-                initialExclusions.getFullInitiallyExcludedStoresIds();
-        for ( Integer excludedStoreId : fullInitiallyExcludedStoresIds ) {
+        for ( Integer excludedStoreId : initialExclusions.getFullInitiallyExcludedStoresIds() ) {
             excludeStoreReserveData( excludedStoreId );
         }
     }
@@ -208,12 +204,9 @@ public class ReserveDataOperator implements ErrorsProne {
     }
 
     private void setInitiallyExcludedArticlesInOtherTakersStores() {
-        ArrayList<Integer> fullInitiallyExcludedStoresIds = initialExclusions.getFullInitiallyExcludedStoresIds();
-        for (Integer excludedStoreId: fullInitiallyExcludedStoresIds) {
-            ArrayList<Integer> initiallyExcludedArticlesSapIds =
-                    initialExclusions.getInitiallyExcludedArticlesSapIdsForStore( excludedStoreId );
+        for (Integer excludedStoreId: initialExclusions.getFullInitiallyExcludedStoresIds() ) {
             reserve.excludeManyArticlesFromDonationsForNotExcludedStores(
-                    initiallyExcludedArticlesSapIds
+                    initialExclusions.getInitiallyExcludedArticlesSapIdsForStore( excludedStoreId )
             );
         }
     }

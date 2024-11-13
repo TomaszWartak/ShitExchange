@@ -206,7 +206,7 @@ public class InitialExclusionsDataOperator implements ErrorsProne {
     }
 
     public boolean areInitialExclusions() {
-        return initialExclusions.getAllStoreIdsWithInitialExclusions().size()>0;
+        return initialExclusions.areInitialExclusions();
     }
 
  /*  todo ? private Integer getFromUserMainTakerStoreId( ArrayList<Integer> idsOfStoresWithExclusions ) {
